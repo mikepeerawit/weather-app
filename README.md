@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Modern Weather App
+
+A sleek and modern weather application built with Next.js and Tailwind CSS. Get real-time weather information and forecasts for any city worldwide with an intuitive dark-themed interface.
+
+![Weather App Screenshot](public/assets/preview.png)
+_Note: Add a screenshot of your application here_
+
+## Features
+
+- 🌡️ Real-time weather data and 5-day forecast
+- 🏙️ Smart city search with autocomplete
+- 🌓 Dark mode interface for comfortable viewing
+- 🎨 Modern, responsive design with smooth animations
+- 🔍 Intelligent search suggestions with population data
+- 📱 Mobile-friendly interface
+
+## Technologies Used
+
+- [Next.js](https://nextjs.org/) - React framework for production
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [OpenWeather API](https://openweathermap.org/api) - Weather data provider
+- [GeoDB Cities API](https://rapidapi.com/wirefreethought/api/geodb-cities/) - City search and suggestions
+- [React Icons](https://react-icons.github.io/react-icons/) - Icon components
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 14.0 or later
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <your-repo-url>
+cd weather-app
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Create a `.env.local` file in the root directory and add your API keys:
+
+```env
+API_KEY=your_openweather_api_key
+RAPID_API_KEY=your_geodb_api_key
+```
+
+4. Start the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The following environment variables are required:
 
-## Learn More
+- `API_KEY` - OpenWeather API key
+- `RAPID_API_KEY` - RapidAPI key for GeoDB Cities API
 
-To learn more about Next.js, take a look at the following resources:
+## Usage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Enter a city name in the search bar
+2. Select a city from the autocomplete suggestions
+3. View current weather conditions and 5-day forecast
+4. Enjoy the responsive dark theme interface
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+weather-app/
+├── src/
+│   ├── components/
+│   │   ├── SearchBar.js
+│   │   └── WeatherDisplay.js
+│   ├── pages/
+│   │   ├── api/
+│   │   │   ├── cities.js
+│   │   │   └── weather.js
+│   │   ├── _app.js
+│   │   └── index.js
+│   └── utils/
+│       └── api.js
+├── public/
+├── styles/
+│   └── globals.css
+└── tailwind.config.js
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Integration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app uses two main APIs:
+
+1. **OpenWeather API**
+
+   - Provides current weather data
+   - 5-day weather forecast
+   - Weather icons and descriptions
+
+2. **GeoDB Cities API**
+   - City search with autocomplete
+   - Population data
+   - Geographic information
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Weather data provided by [OpenWeather](https://openweathermap.org/)
+- City data provided by [GeoDB Cities](https://rapidapi.com/wirefreethought/api/geodb-cities/)
+- Icons from [React Icons](https://react-icons.github.io/react-icons/)
