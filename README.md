@@ -3,7 +3,6 @@
 A sleek and modern weather application built with Next.js and Tailwind CSS. Get real-time weather information and forecasts for any city worldwide with an intuitive dark-themed interface.
 
 ![Weather App Screenshot](public/assets/preview.png)
-_Note: Add a screenshot of your application here_
 
 ## Features
 
