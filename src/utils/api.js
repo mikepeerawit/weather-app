@@ -31,9 +31,20 @@ export const searchCities = async (query) => {
     const response = await fetch(
       `/api/cities?query=${encodeURIComponent(query)}`
     );
-    if (!response.ok) {
-      throw new Error("Failed to fetch cities");
+
+    // Handle rate limit errors
+    if (response.status === 429) {
+      const errorData = await response.json();
+      throw new Error(
+        "rate limit exceeded: " + (errorData.message || "Too many requests")
+      );
     }
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || "Failed to fetch cities");
+    }
+
     const data = await response.json();
     return (
       data.data?.map((city) => ({

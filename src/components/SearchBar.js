@@ -1,6 +1,23 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { FiSearch, FiMapPin } from "react-icons/fi";
 import { searchCities } from "../utils/api";
+
+// Custom debounce hook
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 const SearchBar = ({ onSearch, isLoading: searchLoading }) => {
   const [city, setCity] = useState("");
@@ -13,6 +30,9 @@ const SearchBar = ({ onSearch, isLoading: searchLoading }) => {
   const searchContainerRef = useRef(null);
   const [retryCount, setRetryCount] = useState(0);
   const [lastQuery, setLastQuery] = useState("");
+
+  // Debounce the search input
+  const debouncedSearchTerm = useDebounce(city, 300);
 
   useEffect(() => {
     // Handle clicks outside of the search container
@@ -29,34 +49,43 @@ const SearchBar = ({ onSearch, isLoading: searchLoading }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleInputChange = async (event) => {
+  // Effect to fetch cities when debounced value changes
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (debouncedSearchTerm && debouncedSearchTerm.trim()) {
+        setIsSearching(true);
+        try {
+          const cities = await searchCities(debouncedSearchTerm);
+          setSuggestions(cities);
+          setHasResults(cities.length > 0);
+          setShowSuggestions(true);
+          setRetryCount(0); // Reset retry count on success
+        } catch (error) {
+          console.error("Error fetching cities:", error);
+          if (error.message.includes("rate limit")) {
+            // If rate limited, retry after 1 second
+            setTimeout(() => {
+              setRetryCount((prev) => prev + 1);
+              handleRetry(debouncedSearchTerm);
+            }, 1000);
+          }
+          setSuggestions([]);
+        } finally {
+          setIsSearching(false);
+        }
+      }
+    };
+
+    fetchCities();
+  }, [debouncedSearchTerm]);
+
+  const handleInputChange = (event) => {
     const value = event.target.value;
     setCity(value);
     setLastQuery(value);
     setHighlightedIndex(-1);
 
-    if (value && value.trim()) {
-      setIsSearching(true);
-      try {
-        const cities = await searchCities(value);
-        setSuggestions(cities);
-        setHasResults(cities.length > 0);
-        setShowSuggestions(true);
-        setRetryCount(0); // Reset retry count on success
-      } catch (error) {
-        console.error("Error fetching cities:", error);
-        if (error.message.includes("rate limit")) {
-          // If rate limited, retry after 1 second
-          setTimeout(() => {
-            setRetryCount((prev) => prev + 1);
-            handleRetry(value);
-          }, 1000);
-        }
-        setSuggestions([]);
-      } finally {
-        setIsSearching(false);
-      }
-    } else {
+    if (!value || !value.trim()) {
       setSuggestions([]);
       setShowSuggestions(false);
       setHasResults(false);
